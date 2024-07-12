@@ -12,14 +12,17 @@ app.get('/', (req,res) => {
 
 app.post('/create',async (req,res) => {
 
-    let {name,email,imageUrl} = req.body;
+    let {name,email,profileUrl} = req.body;
     let user =  await userModel.create({
         name,
         email,
-        imageUrl
+        profileUrl
      });
 
      console.log("user = "+user);
+     res.send({
+        
+     })
 
   
 });

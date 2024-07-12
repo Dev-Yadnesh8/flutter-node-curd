@@ -1,4 +1,4 @@
-import 'package:basic_curd_flutter_node/screens/home_screen.dart';
+import 'package:basic_curd_flutter_node/screens/home/main_screen/home_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
