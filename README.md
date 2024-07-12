@@ -1,0 +1,1 @@
+Thsi is basic curd operation proj in flutter and node js !!  This is at initial level and i am learning nodejs and the project will be improved in future as i learn more deep concepts about backend nodeJs and mongoDB 
