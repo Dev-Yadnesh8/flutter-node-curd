@@ -11,6 +11,7 @@ class AddUserBloc extends Bloc<AddUserEvent, AddUserState> {
   UserCrudRepo repo = UserCrudRepo();
   AddUserBloc() : super(AddUserInitialState()) {
     on<SubmitClickEvent>(submitClickEvent);
+    on<BackButtonClickEvent>(backButtonClickEvent);
   }
   
  
@@ -25,5 +26,10 @@ class AddUserBloc extends Bloc<AddUserEvent, AddUserState> {
        emit(AddUserErrorState());
      }
 
+  }
+
+  FutureOr<void> backButtonClickEvent(BackButtonClickEvent event, Emitter<AddUserState> emit) {
+    print("Back  Button Press");
+    emit(BackButtonClickNavState());
   }
 }
