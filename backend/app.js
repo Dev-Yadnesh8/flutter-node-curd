@@ -30,24 +30,24 @@ app.post('/create',async (req,res) => {
 app.get('/read',async (req,res) => {
 
   let users =  await userModel.find();
-  console.log(`user=`+user);
-
-  res.statusCode(200).send({
+  console.log(`user=`+users);
+if(res.statusCode == 200){
+    res.send({
     'code' : '200',
     'message' : 'User created successfully',
     'userData': users,
-  });
-
-
-    res.send("Hey")
+    })
+}
 });
 
 app.get('/update', (req,res) => {
     res.send("Hey")
 });
 
-app.get('/delete', (req,res) => {
-    res.send("Hey")
+app.delete('/delete/:userId',async (req,res) => {
+ let deletedUser = await userModel.findOneAndDelete({_id:req.params.userId})
+ console.log("Deleted User--"+deletedUser);
+ res.status(200).send(deletedUser);
 });
 
 app.listen(3000)

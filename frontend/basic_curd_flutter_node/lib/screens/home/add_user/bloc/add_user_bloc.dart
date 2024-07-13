@@ -1,5 +1,5 @@
+
 import 'dart:async';
-import 'package:basic_curd_flutter_node/screens/home/main_screen/bloc/crud_bloc.dart';
 import 'package:basic_curd_flutter_node/screens/home/repository/user_crud_repo.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
@@ -16,14 +16,16 @@ class AddUserBloc extends Bloc<AddUserEvent, AddUserState> {
   
  
   Future<FutureOr<void>> submitClickEvent(SubmitClickEvent event, Emitter<AddUserState> emit) async {
+    emit(AddUserLoadingState());
      print("Add User Cliked");
      print("User data- ${event.userData}");
-     emit(AddUserLoadingState());
      try {
       await repo.createUser(event.userData);
       emit(AddUserLoadedState());
      } catch (e) {
-       emit(AddUserErrorState());
+       emit(AddUserErrorState(errorMessage: e.toString()));
+       await Future.delayed(Duration(seconds: 1));
+       emit(AddUserInitialState());
      }
 
   }

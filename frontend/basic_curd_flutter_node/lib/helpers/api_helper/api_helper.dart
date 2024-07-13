@@ -1,6 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class ApiHelper {
   Dio dio = Dio();
@@ -8,7 +6,6 @@ class ApiHelper {
   Future<Response> get(String url, {Map<String, dynamic>? headers}) async {
     try {
       Response response = await dio.get(url, options: Options(headers: headers));
-      _handleSuccessResponse();
       return response;
     } on DioException catch (e) {
       _handleDioError(e);
@@ -26,7 +23,6 @@ class ApiHelper {
         data: body,
         options: Options(headers: headers),
       );
-      _handleSuccessResponse();
       return response;
     } on DioException catch (e) {
       _handleDioError(e);
@@ -44,7 +40,6 @@ class ApiHelper {
         data: body,
         options: Options(headers: headers),
       );
-      _handleSuccessResponse();
       return response;
     } on DioException catch (e) {
       _handleDioError(e);
@@ -62,7 +57,6 @@ class ApiHelper {
         data: body,
         options: Options(headers: headers),
       );
-      _handleSuccessResponse();
       return response;
     } on DioException catch (e) {
       _handleDioError(e);
@@ -71,18 +65,6 @@ class ApiHelper {
       print('DELETE request error: $e');
       rethrow;
     }
-  }
-
-  void _handleSuccessResponse() {
-    Fluttertoast.showToast(
-      msg: "Request successful",
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 1,
-      backgroundColor: Colors.green,
-      textColor: Colors.white,
-      fontSize: 16.0,
-    );
   }
 
   void _handleDioError(DioException e) {
@@ -108,34 +90,18 @@ class ApiHelper {
         break;
       case DioExceptionType.badCertificate:
         errorDescription = "SSL certificate error occurred";
+        break;
       case DioExceptionType.connectionError:
         errorDescription = "Connection error occurred";
+        break;
     }
     print('Dio error: $errorDescription');
 
-    Fluttertoast.showToast(
-      msg: errorDescription,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 1,
-      backgroundColor: Colors.red,
-      textColor: Colors.white,
-      fontSize: 16.0,
-    );
-
     if (e.response?.statusCode == 401) {
-      Fluttertoast.showToast(
-        msg: "Unauthorized. Please log in again.",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.orange,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
+      print("Unauthorized. Please log in again.");
     }
 
-    throw e;  // Rethrow the error after logging and displaying toast
+    throw e;  // Rethrow the error after logging
   }
 
   String _handleHttpError(int? statusCode) {
@@ -149,4 +115,5 @@ class ApiHelper {
     }
     return errorDescription;
   }
+
 }

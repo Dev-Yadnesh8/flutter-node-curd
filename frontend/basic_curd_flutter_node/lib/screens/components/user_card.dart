@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 
 class UserCard extends StatelessWidget {
-  const UserCard({super.key});
+  final String impPath;
+  final String name;
+  final String email;
+  void Function()? onEditTap;
+  void Function()? onDeleteTap;
+  
+   UserCard({super.key, required this.impPath, required this.name, required this.email,this.onEditTap,this.onDeleteTap});
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +30,7 @@ class UserCard extends StatelessWidget {
                 ),
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: Image.network(
-                        'https://upload.wikimedia.org/wikipedia/commons/9/9b/Virat_Kohli_in_PMO_New_Delhi.jpg')),
+                    child: Image.network(impPath)),
               ),
             )),
             Expanded(
@@ -36,20 +41,20 @@ class UserCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Column(
+                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "User name",
-                            style: TextStyle(
+                            name,
+                            style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 26,
                                 fontWeight: FontWeight.bold),
                           ),
-                          Text(
-                            'User email@gmail.com',
+                           Text(
+                            email,
                             style:
-                                TextStyle(color: Colors.black45, fontSize: 14),
+                                const TextStyle(color: Colors.black45, fontSize: 14),
                           ),
                         ],
                       ),
@@ -58,7 +63,7 @@ class UserCard extends StatelessWidget {
                         child: Row(
                           children: [
                             InkWell(
-                                onTap: () {},
+                                onTap: onEditTap,
                                 child: const Text(
                                   'Edit User',
                                   style: TextStyle(
@@ -84,13 +89,10 @@ class UserCard extends StatelessWidget {
                                           },
                                         ),
                                         TextButton(
+                                          onPressed: onDeleteTap,
                                           child: const Text('Delete',
                                               style:
-                                                  TextStyle(color: Colors.red)),
-                                          onPressed: () {
-                                            // Add your delete logic here
-                                            Navigator.of(context).pop();
-                                          },
+                                                  TextStyle(color: Colors.red))
                                         ),
                                       ],
                                     );

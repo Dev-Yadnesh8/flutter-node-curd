@@ -1,3 +1,4 @@
+import 'package:basic_curd_flutter_node/helpers/flash_messages/flash_messages.dart';
 import 'package:basic_curd_flutter_node/screens/home/add_user/bloc/add_user_bloc.dart';
 import 'package:basic_curd_flutter_node/screens/home/main_screen/bloc/crud_bloc.dart';
 import 'package:basic_curd_flutter_node/screens/home/main_screen/home_screen.dart';
@@ -28,25 +29,9 @@ class _AddUserScreenState extends State<AddUserScreen> {
   Widget build(BuildContext context) {
     return BlocConsumer<AddUserBloc,AddUserState>(
       bloc: addUserBloc,
-      buildWhen: (previous, current) => current is !AddUserNavActionState ,
-      listenWhen: (previous, current) => current is AddUserNavActionState ,
+      buildWhen: (previous, current) => current is !AddUserActionState ,
+      listenWhen: (previous, current) => current is AddUserActionState ,
       builder: (context, state) {
-      if(state is AddUserLoadedState){
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen(),));
-        }else if(state is AddUserErrorState){
-          return Scaffold(
-             appBar: AppBar(
-        title: const Text("Add a User"),
-        leading: IconButton(onPressed: () {
-          addUserBloc.add(BackButtonClickEvent());
-        }, icon: const Icon(Icons.arrow_back_ios)),
-        
-      ),
-      body: const Center(
-        child: Text("Error Adding User"),
-      ),
-          );
-        }
       return Scaffold(
       appBar: AppBar(
         title: const Text("Add a User"),
@@ -91,8 +76,8 @@ class _AddUserScreenState extends State<AddUserScreen> {
                         keyboardType: TextInputType.url,
                       ),
                       const SizedBox(height: 20),
-                      if(state is AddUserLoadingState) const CircularProgressIndicator(),
-                      ElevatedButton(
+                      if(state is AddUserLoadingState) const CircularProgressIndicator(color: Colors.blue,),
+                      if(state is AddUserInitialState) ElevatedButton(
                         style: ButtonStyle(
                           backgroundColor: const WidgetStatePropertyAll(Colors.blue),
                           elevation: const WidgetStatePropertyAll(0),
@@ -118,8 +103,13 @@ class _AddUserScreenState extends State<AddUserScreen> {
     );
       },
        listener: (context, state) {
-          if(state is AddUserNavActionState){
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen(),));
+          if(state is BackButtonClickNavState){
+        Navigator.pop(context);
+        }else if(state is AddUserLoadedState){
+          FlashMessages.successMsg(context: context, successTitle: 'Success', successDesc: 'User created Successfully');
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen(),));
+        }else if(state is AddUserErrorState){
+          FlashMessages.errorMsg(context: context, errorTitle: 'Ohh Snapp', errorDesc: state.errorMessage);
         }
        },);
   }
