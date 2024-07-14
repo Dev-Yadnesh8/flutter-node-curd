@@ -2,6 +2,7 @@ import 'package:basic_curd_flutter_node/screens/home/add_user/add_user.dart';
 import 'package:basic_curd_flutter_node/screens/components/user_card.dart';
 import 'package:basic_curd_flutter_node/screens/home/main_screen/bloc/crud_bloc.dart';
 import 'package:basic_curd_flutter_node/screens/home/models/user_model.dart';
+import 'package:basic_curd_flutter_node/screens/home/update_user/update_user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -36,25 +37,31 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         } else if (state is CrudLoadedState) {
           final loadedState = state;
+          final dataLength = loadedState.userData.length;
           return Scaffold(
             appBar: AppBar(
               title: const Text("Flutter Nodejs"),
             ),
-            body: ListView.builder(
-              itemCount: loadedState.userData.length,
+            body:dataLength == 0 ? Center(child: Text("No user Data Available !!!")) :  ListView.builder(
+              itemCount: dataLength,
               itemBuilder: (context, index) {
                 UserModel data = loadedState.userData[index];
-                return  UserCard(impPath: data.url.toString(), name: data.name.toString(), email: data.email.toString(),onDeleteTap: () {
+                return  UserCard(impPath: data.url.toString(), name: data.name.toString(), email: data.email.toString(),
+                onDeleteTap: () {
                   crudBloc.add(DeleteUserOptionClickEvent(userId: data.sId.toString()));
                   Navigator.pop(context);
 
-                },);
+                },
+                onEditTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => UpdateUserScreen(userData: data),));
+                },
+                );
               },
             ),
             floatingActionButton: FloatingActionButton(
               onPressed: () {
                 crudBloc.add(AddUserButtonClickEvent());
-                //Navigator.push(context, MaterialPageRoute(builder: (context) => const AddUserScreen(),));
+        
               },
               child: const Icon(Icons.add),
             ),

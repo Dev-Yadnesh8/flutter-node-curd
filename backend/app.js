@@ -40,8 +40,14 @@ if(res.statusCode == 200){
 }
 });
 
-app.get('/update', (req,res) => {
-    res.send("Hey")
+app.post('/update/:userId',async (req,res) => {
+    let {name,email,profileUrl} = req.body;
+    let updatedUser =  await userModel.findOneAndUpdate(
+        {_id : req.params.userId},
+        {name,email,profileUrl},
+        {new : true});
+    console.log("Updated user=="+updatedUser);
+    res.status(200).send(updatedUser);
 });
 
 app.delete('/delete/:userId',async (req,res) => {

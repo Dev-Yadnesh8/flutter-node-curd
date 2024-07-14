@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:basic_curd_flutter_node/helpers/api_helper/api_helper.dart';
 import 'package:basic_curd_flutter_node/screens/home/models/user_model.dart';
 
@@ -35,14 +37,17 @@ Future<void> createUser(Map<String, dynamic> userData) async {
 }
 
 
-void editUser()async{
- final res = await apiHelper.put('');
- if(res.statusCode == 200){
-  print('Success to edit users');
- }else{
-  print('error-edit-user-with ${res.statusCode}');
- }
+Future<void> editUser(Map<String, dynamic> userData, String userID) async {
+  final header = {'Content-Type': 'application/json; charset=UTF-8'};
+
+  final res = await apiHelper.post('$baseUrl/update/$userID', headers: header, body: jsonEncode(userData));
+  if (res.statusCode == 200) {
+    print('Success to edit users');
+  } else {
+    print('Error editing user with status code: ${res.statusCode}');
+  }
 }
+
 
 
 Future<void> deleteUser(String userId)async{

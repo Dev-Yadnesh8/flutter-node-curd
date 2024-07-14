@@ -1,41 +1,53 @@
 import 'package:basic_curd_flutter_node/helpers/flash_messages/flash_messages.dart';
-import 'package:basic_curd_flutter_node/screens/home/add_user/bloc/add_user_bloc.dart';
 import 'package:basic_curd_flutter_node/screens/home/main_screen/home_screen.dart';
+import 'package:basic_curd_flutter_node/screens/home/models/user_model.dart';
+import 'package:basic_curd_flutter_node/screens/home/update_user/bloc/update_user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../helpers/ui_helper.dart';
 
-class AddUserScreen extends StatefulWidget {
-  const AddUserScreen({super.key});
+class UpdateUserScreen extends StatefulWidget {
+  final UserModel userData ;
+  const UpdateUserScreen({super.key, required this.userData});
 
   @override
-  State<AddUserScreen> createState() => _AddUserScreenState();
+  State<UpdateUserScreen> createState() => _UpdateUserScreenState();
 }
 
-class _AddUserScreenState extends State<AddUserScreen> {
+class _UpdateUserScreenState extends State<UpdateUserScreen> {
   final UiHelper uiHelper = UiHelper();
 
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController photoUrlController = TextEditingController();
 
-  AddUserBloc addUserBloc = AddUserBloc();
+
 
   GlobalKey formKey = GlobalKey<FormState>();
+  @override
+  void initState() {
+    nameController.text = widget.userData.name.toString();
+     emailController.text = widget.userData.email.toString();
+      photoUrlController.text = widget.userData.url.toString();
+    super.initState();
+  }
+
+UpdateUserBloc updateUserBloc = UpdateUserBloc();
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AddUserBloc,AddUserState>(
-      bloc: addUserBloc,
-      buildWhen: (previous, current) => current is !AddUserActionState ,
-      listenWhen: (previous, current) => current is AddUserActionState ,
+    return BlocConsumer<UpdateUserBloc,UpdateUserState>(
+      
+      bloc: updateUserBloc,
+      listenWhen: (previous, current) => current is UpdateUserActionState,
+      buildWhen: (previous, current) =>current is !UpdateUserActionState,
       builder: (context, state) {
-      return Scaffold(
+       return Scaffold(
       appBar: AppBar(
         title: const Text("Add a User"),
         leading: IconButton(onPressed: () {
-          addUserBloc.add(BackButtonClickEvent());
+          updateUserBloc.add(BackButtonClickEvent());
         }, icon: const Icon(Icons.arrow_back_ios)),
       ),
       body: Center(
@@ -75,8 +87,8 @@ class _AddUserScreenState extends State<AddUserScreen> {
                         keyboardType: TextInputType.url,
                       ),
                       const SizedBox(height: 20),
-                      if(state is AddUserLoadingState) const CircularProgressIndicator(color: Colors.blue,),
-                      if(state is AddUserInitialState) ElevatedButton(
+                      if(state is UpdateUserLoadingState) const CircularProgressIndicator(color: Colors.blue,),
+                      if(state is UpdateUserInitialState)ElevatedButton(
                         style: ButtonStyle(
                           backgroundColor: const WidgetStatePropertyAll(Colors.blue),
                           elevation: const WidgetStatePropertyAll(0),
@@ -84,11 +96,11 @@ class _AddUserScreenState extends State<AddUserScreen> {
                         
                           )),
                         onPressed: () {
-                          addUserBloc.add(SubmitClickEvent(userData: {
+                          updateUserBloc.add(SubmitClickEvent(userData: {
                             'name' : nameController.text,
                             'email' : emailController.text,
                             'profileUrl' : photoUrlController.text,
-                          }));
+                          }, userId: widget.userData.sId.toString()));
                         },
                          child: const Text("Submit",style: TextStyle(color: Colors.white),))
                     ],
@@ -100,18 +112,20 @@ class _AddUserScreenState extends State<AddUserScreen> {
         ),
       ),
     );
-      },
-       listener: (context, state) {
-          if(state is BackButtonClickNavState){
-        Navigator.pop(context);
-        }else if(state is AddUserLoadedState){
-          FlashMessages.successMsg(context: context, successTitle: 'Success', successDesc: 'User created Successfully');
-            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const HomeScreen(),),(Route<dynamic> route) => false,);
-        }else if(state is AddUserErrorState){
-          FlashMessages.errorMsg(context: context, errorTitle: 'Ohh Snapp', errorDesc: state.errorMessage);
-        }
-       },);
+    }, 
+    listener: (context, state) {
+      if(state is BackButtonClickedState){
+        Navigator.pop(context); 
+      }else if(state is UpdateUserLoadedState){
+        FlashMessages.successMsg(context: context, successTitle: 'Edit Success', successDesc: 'User data edited successfully');
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomeScreen(),),(Route<dynamic> route) => false,);
+      }else if(state is UpdateUserErrorState){
+        FlashMessages.errorMsg(context: context, errorTitle: 'Ohh Snapp!!!', errorDesc: state.errorMessage);
+      }
+  
+    
+
+    },);
+   
   }
 }
-
-
