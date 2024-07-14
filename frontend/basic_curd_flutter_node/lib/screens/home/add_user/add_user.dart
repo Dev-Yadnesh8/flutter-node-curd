@@ -1,6 +1,5 @@
 import 'package:basic_curd_flutter_node/helpers/flash_messages/flash_messages.dart';
 import 'package:basic_curd_flutter_node/screens/home/add_user/bloc/add_user_bloc.dart';
-import 'package:basic_curd_flutter_node/screens/home/main_screen/bloc/crud_bloc.dart';
 import 'package:basic_curd_flutter_node/screens/home/main_screen/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
