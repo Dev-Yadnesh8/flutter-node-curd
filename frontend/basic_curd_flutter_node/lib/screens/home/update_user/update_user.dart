@@ -44,6 +44,7 @@ UpdateUserBloc updateUserBloc = UpdateUserBloc();
       buildWhen: (previous, current) =>current is !UpdateUserActionState,
       builder: (context, state) {
        return Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         title: const Text("Add a User"),
         leading: IconButton(onPressed: () {
@@ -55,7 +56,8 @@ UpdateUserBloc updateUserBloc = UpdateUserBloc();
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: Card(
             elevation: 2,
-            shadowColor: Colors.grey,
+            shadowColor: Colors.white,
+            color: Colors.grey.shade800,
             child: IntrinsicHeight(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),

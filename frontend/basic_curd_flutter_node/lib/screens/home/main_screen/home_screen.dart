@@ -3,8 +3,10 @@ import 'package:basic_curd_flutter_node/screens/components/user_card.dart';
 import 'package:basic_curd_flutter_node/screens/home/main_screen/bloc/crud_bloc.dart';
 import 'package:basic_curd_flutter_node/screens/home/models/user_model.dart';
 import 'package:basic_curd_flutter_node/screens/home/update_user/update_user.dart';
+import 'package:basic_curd_flutter_node/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,6 +17,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   CrudBloc crudBloc = CrudBloc();
+
+  bool isDark  = false;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
           crudBloc.add(FetchUserInitialEvent());
         } else if (state is CrudLoadingState) {
           return Scaffold(
+            backgroundColor: Theme.of(context).colorScheme.surface,
             appBar: AppBar(
               title: const Text("Flutter Nodejs"),
             ),
@@ -35,14 +40,23 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Colors.blue,
             )),
           );
-        } else if (state is CrudLoadedState) {
+        }else if(state is CrudErrorState){
+       
+          return Scaffold(
+              backgroundColor: Theme.of(context).colorScheme.surface,
+            body: const Center(child: Text("Error Connecting to server")),
+          );
+        }
+         else if (state is CrudLoadedState) {
           final loadedState = state;
           final dataLength = loadedState.userData.length;
           return Scaffold(
+            backgroundColor: Theme.of(context).colorScheme.surface,
             appBar: AppBar(
-              title: const Text("Flutter Nodejs"),
+        
+              title:const Text("Flutter Nodejs",style: TextStyle(fontWeight: FontWeight.bold),),
             ),
-            body:dataLength == 0 ? Center(child: Text("No user Data Available !!!")) :  ListView.builder(
+            body:dataLength == 0 ? const Center(child: Text("No user Data Available !!!")) :  ListView.builder(
               itemCount: dataLength,
               itemBuilder: (context, index) {
                 UserModel data = loadedState.userData[index];
@@ -59,11 +73,12 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             floatingActionButton: FloatingActionButton(
+              backgroundColor: Colors.blue,
               onPressed: () {
                 crudBloc.add(AddUserButtonClickEvent());
         
               },
-              child: const Icon(Icons.add),
+              child: const Icon(Icons.add,color: Colors.white,),
             ),
           );
         }
